@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from langchain_community.document_loaders import TextLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import MarkdownHeaderTextSplitter  # only this import changes
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
@@ -32,11 +32,32 @@ def build_vector_db():
     if not raw_docs:
         raise ValueError("No .md files found in knowledge-base/")
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=900,
-        chunk_overlap=150,
+    # CHANGE 1: Split on markdown headers instead of raw character count
+    splitter = MarkdownHeaderTextSplitter(
+        headers_to_split_on=[
+            ("#",  "h1"),
+            ("##", "section"),
+            ("###","subsection"),
+        ],
+        strip_headers=False,  # keep "## Market & Economic Notes" inside chunk text
     )
-    chunks = splitter.split_documents(raw_docs)
+
+    chunks = []
+    for doc in raw_docs:
+        # MarkdownHeaderTextSplitter works on raw text, not Documents
+        split_chunks = splitter.split_text(doc.page_content)
+
+        for chunk in split_chunks:
+            # CHANGE 2: Carry forward your original metadata, then add section
+            chunk.metadata["source"] = doc.metadata["source"]
+            chunk.metadata["topic"]  = doc.metadata["topic"]
+            section = chunk.metadata.get("section", "overview")
+
+            # Prepend section label so the embedding captures it semantically
+            chunk.page_content = (
+                f"[{doc.metadata['topic']} — {section}]\n\n{chunk.page_content}"
+            )
+            chunks.append(chunk)
 
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"

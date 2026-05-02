@@ -62,12 +62,18 @@ class SoilData(BaseModel):
     EC: Optional[float] = Field(None)
     Soil_Type: Optional[str] = Field(None)
 
+KNOWN_CROPS = {"cotton", "wheat", "rice", "maize", "sugarcane", 
+               "sunflower", "sorghum", "potato", "onion", "mango"}
 
 class SupervisorOutput(BaseModel):
     detected_lang: Literal["en", "ur"]
     intent: Literal["soil_crop", "weather", "market", "rag_agronomy", "general"]
     soil_data: Optional[SoilData]
     location: Optional[str]  
+    detected_crop: Optional[str] = Field(          # ← ADD THIS
+        None,
+        description=f"Crop name if mentioned. Must be one of: {KNOWN_CROPS}. None if not mentioned."
+    )
 load_dotenv()  # Load environment variables from .env file
 class AgroBotState(TypedDict):
     """
@@ -84,8 +90,8 @@ class AgroBotState(TypedDict):
     market_result:   Optional[str]                   # search snippet
     rag_result:      Optional[str]                   # RAG answer
     final_response:  Optional[str]                   # formatted reply
-    rag_context: None | str                            # retrieved context for RAG node
-
+    detected_crop:     Optional[str]  
+    location:        Optional[str] 
 # ══════════════════════════════════════════════════════════════════════════════
 # 2.  SHARED RESOURCES  (loaded once at import time)
 # ══════════════════════════════════════════════════════════════════════════════
@@ -112,7 +118,23 @@ def _load_xgboost_models():
         pickle.load(open(paths["explainer"],"rb")),
     )
 
-
+def build_context_aware_query(state: AgroBotState) -> str:
+    """Rewrite user query with full conversation context."""
+    if not state["messages"]:
+        return state["user_query"]
+    
+    llm = get_llm(temperature=0)
+    result = llm.invoke([
+        SystemMessage(content="""You are a query rewriter for an agricultural chatbot.
+  Given the conversation history and the latest user message, rewrite the latest message 
+      as a fully self-contained query that includes all relevant context from the conversation.
+           Return ONLY the rewritten query, nothing else."""),
+        *state["messages"],
+        HumanMessage(content=f"Rewrite this as a self-contained query: '{state['user_query']}'")
+    ]).content.strip()
+    
+    print(f"🔄 Context-aware query: {result}")
+    return result
 def _load_vector_store():
     """Load ChromaDB vector store. Returns None if missing."""
     chroma_path = Path(__file__).parent / "chroma_db"
@@ -182,19 +204,24 @@ def supervisor_node(state: AgroBotState) -> AgroBotState:
     llm = get_llm(temperature=0)
 
     structured_llm = llm.with_structured_output(SupervisorOutput)
-
+    enriched_query = build_context_aware_query(state)
     result: SupervisorOutput = structured_llm.invoke([
         SystemMessage(content=SUPERVISOR_SYSTEM),
-        HumanMessage(content=state["user_query"])
+        *state["messages"],
+        HumanMessage(content=enriched_query)
     ])
+    detected_crop = result.detected_crop.lower().strip() if result.detected_crop else None
 
     soil_data = result.soil_data.dict() if result.soil_data else None
 
     return {
         **state,
         "detected_lang": result.detected_lang,
+        "user_query": enriched_query,  
         "intent": result.intent,
         "soil_data": soil_data,
+        "detected_crop":  detected_crop,           # ← ADD THIS
+
         "messages": state["messages"] + [
             HumanMessage(content=state["user_query"])
         ],
@@ -345,6 +372,7 @@ def weather_node(state: AgroBotState) -> AgroBotState:
         search_q = f"current weather {city} Pakistan right now"
         try:
             search_result = SEARCH_TOOL.run(search_q)
+            print(f"\n🔍 WEATHER SEARCH RESULTS:\n{search_result}\n")
             weather_data = {
                 "source": "web_search",
                 "city": city,
@@ -410,6 +438,7 @@ def market_node(state: AgroBotState) -> AgroBotState:
     search_q = f"Pakistan {query} price 2026 market mandi PKR"
     try:
         search_result = SEARCH_TOOL.run(search_q)
+        print(f"\n🔍 MARKET SEARCH RESULTS:\n{search_result}\n")
     except Exception as e:
         search_result = f"Search unavailable: {e}"
 
@@ -447,13 +476,29 @@ If detected_lang is "ur", respond in Urdu.
 def rag_node(state: AgroBotState) -> AgroBotState:
     """Retrieve from ChromaDB (or fallback to DuckDuckGo) then answer."""
     query = state["user_query"]
+    topic = state.get("detected_crop")  # e.g. "cotton", "wheat" — if you have this in state
     context = ""
-
     retrieved_docs = []
 
     if VECTOR_STORE is not None:
         try:
-            retrieved_docs = VECTOR_STORE.similarity_search(query, k=4)
+            # CHANGE 1: MMR instead of similarity_search
+            # fetch_k=12 → pulls 12 candidates, then picks 4 most diverse
+            search_kwargs = {
+                "k": 4,
+                "fetch_k": 12,
+            }
+
+            # CHANGE 2: topic filter — only search relevant crop's chunks
+            if topic:
+                search_kwargs["filter"] = {"topic": topic}
+
+            retriever = VECTOR_STORE.as_retriever(
+                search_type="mmr",
+                search_kwargs=search_kwargs,
+            )
+            retrieved_docs = retriever.invoke(query)
+
         except Exception as e:
             print(f"⚠️  Retrieval error: {e}")
             retrieved_docs = []
@@ -462,25 +507,32 @@ def rag_node(state: AgroBotState) -> AgroBotState:
         print("\n" + "="*60)
         print("📚 RAG RETRIEVAL RESULTS:")
         for i, doc in enumerate(retrieved_docs, 1):
-          print(f"\n--- Doc {i} ---")
-        print("Source:", doc.metadata.get("source"))
-        print(doc.page_content[:200])
+            print(f"\n--- Doc {i} ---")
+            print("Source:", doc.metadata.get("source"))
+            print("Section:", doc.metadata.get("section"))  # now visible
+            print(doc.page_content[:200])
         print("="*60 + "\n")
+
         parts = []
         for i, doc in enumerate(retrieved_docs, 1):
             src = doc.metadata.get("source", f"chunk_{i}")
-            parts.append(f"[Source: {src}]\n{doc.page_content}")
+            section = doc.metadata.get("section", "")
+            # CHANGE 3: include section in context so LLM knows where info came from
+            parts.append(f"[Source: {src} | Section: {section}]\n{doc.page_content}")
         context = "\n\n---\n\n".join(parts)
+
     else:
         search_q = f"Pakistan agriculture {query} advice"
         try:
             context = SEARCH_TOOL.run(search_q)
+            print(f"\n🔍 SEARCH RESULTS:\n{context}\n")
         except Exception:
             context = "No relevant context found."
 
     llm = get_llm(temperature=0.4)
     messages = [
         SystemMessage(content=RAG_SYSTEM),
+        *state["messages"],
         HumanMessage(content=(
             f"Context:\n{context}\n\n"
             f"Question: {query}\n"
@@ -513,6 +565,7 @@ def general_node(state: AgroBotState) -> AgroBotState:
     llm = get_llm(temperature=0.5)
     messages = [
         SystemMessage(content=GENERAL_SYSTEM),
+        *state["messages"],
         HumanMessage(content=(
             f"User message: {state['user_query']}\n"
             f"Detected language: {state['detected_lang']}"
@@ -640,6 +693,8 @@ def run_agrobot(user_message: str, history: list = None) -> str:
         "market_result":     None,
         "rag_result":        None,
         "final_response":    None,
+        "detected_crop":     None,                     # ← ADD THIS
+
     }
 
     result = agrobot_graph.invoke(initial_state)
