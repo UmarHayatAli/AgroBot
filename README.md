@@ -14,9 +14,11 @@
 #  Run This Cell
 import os
 
-os.environ["GROQ_API_KEY"] = "your_key_here"
-os.environ["OPENWEATHER_API_KEY"] = "your_key_here"
+os.environ["GROQ_API_KEY"] = "your_key_here";
 
+os.environ["OPENWEATHER_API_KEY"] = "your_key_here"
+# Prepare RAG.
+!python ingest_knowledge_base.py
 #  Run Chatbot
 !python MultiLingualChatBot.py
 
