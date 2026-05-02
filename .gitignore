@@ -1,0 +1,31 @@
+# Root .gitignore for AgroBot project
+
+# Dependencies
+node_modules/
+venv/
+.env
+.env.local
+.env.*
+!.env.example
+
+# Build/output
+.next/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+
+# Junk / temporary files
+junk/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Antigravity artifacts (optional - usually better to keep them out of main repo)
+implementation_plan.md
+task.md
+walkthrough.md
+suggestion.md
