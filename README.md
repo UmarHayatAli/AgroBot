@@ -18,6 +18,6 @@ os.environ["GROQ_API_KEY"] = "your_key_here"
 os.environ["OPENWEATHER_API_KEY"] = "your_key_here"
 
 #  Run Chatbot
-!python MultilingualChatBot.py
+!python MultiLingualChatBot.py
 
 
