@@ -476,7 +476,7 @@ def dispatch(
         if str(backend_dir) not in sys.path:
             sys.path.insert(0, str(backend_dir))
         from MultiLingualChatBot import run_agrobot
-        result = run_agrobot(user_message=query, history=history)
+        result = run_agrobot(user_message=query, history=history, lang=lang)
         return {
             "text":   result.get("text", ""),
             "intent": result.get("intent", "general"),

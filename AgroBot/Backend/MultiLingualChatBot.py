@@ -910,6 +910,7 @@ def run_agrobot(
     audio_bytes:   bytes = None,
     audio_ext:     str   = "wav",
     audio_output:  bool  = False,
+    lang:          str   = "",   # UI-selected language — overrides auto-detection
 ) -> dict:
     """
     Main entry point for the AgroBot agent.
@@ -933,7 +934,7 @@ def run_agrobot(
     initial_state: AgroBotState = {
         "messages":          history or [],
         "user_query":        user_message,
-        "detected_lang":     "en",
+        "detected_lang":     lang or detect_language_unicode(user_message) or "en",
         "intent":            "",
         "soil_data":         None,
         "prediction_result": None,
