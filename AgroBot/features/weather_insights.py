@@ -126,8 +126,10 @@ class WeatherInsightsTool(BaseAgriTool):
             )
             if resp.status_code == 200:
                 return resp.json()
+            else:
+                print(f"⚠️  Open-Meteo API returned status {resp.status_code}: {resp.text}")
         except Exception as e:
-            print(f"⚠️  Open-Meteo API failed: {e}")
+            print(f"⚠️  Open-Meteo API exception: {e}")
         return None
 
     def _format_forecast(self, raw: dict, city: str) -> dict:
@@ -227,6 +229,8 @@ class WeatherInsightsTool(BaseAgriTool):
             error_msgs = {
                 "en": f"Sorry, I couldn't fetch weather data for {city} right now. Please check your internet connection and try again.",
                 "ur": f"معذرت، {city} کا موسمی ڈیٹا ابھی دستیاب نہیں۔ انٹرنیٹ چیک کریں اور دوبارہ کوشش کریں۔",
+                "pa": f"معاف کرنا، {city} دا موسم دا ڈیٹا نہیں ملیا۔ اپنا انٹرنیٹ چیک کرو۔",
+                "skr": f"معافی، {city} دا موسم دا ڈیٹا کائنی ملیا۔ اپنا انٹرنیٹ چیک کرو۔",
             }
             return self._error_response(lang, error_msgs.get(lang, error_msgs["en"]))
 
@@ -257,7 +261,9 @@ class WeatherInsightsTool(BaseAgriTool):
                 prompt_msgs.to_messages()[1]
             ]
             
+            print("Invoking LLM...")
             resp  = llm.invoke(messages)
+            print("LLM returned!")
             text = resp.content.strip()
         except Exception as e:
             print(f"⚠️  LLM weather narration failed: {e}")
