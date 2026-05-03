@@ -76,7 +76,7 @@ export default function MessageBubble({ message, lang, onSpeak }: MessageBubbleP
       lang === "pa" ? (message.textPa || message.textUr || message.text) :
         lang === "skr" ? (message.textSkr || message.textUr || message.text) :
           message.text;
-  const intent = message.intent ? intentConfig[message.intent] : null;
+  const intent = message.intent ? (intentConfig as any)[message.intent] : null;
   const time = mounted ? message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }) : "";
 
   if (isTyping) {
