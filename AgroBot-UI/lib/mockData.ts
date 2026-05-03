@@ -27,7 +27,7 @@ export interface Message {
   textUr?: string;
   textPa?: string;
   textSkr?: string;
-  intent?: "weather" | "disease" | "soil" | "flood" | "general";
+  intent?: string;
   timestamp: Date;
   imageUrl?: string;
 }
