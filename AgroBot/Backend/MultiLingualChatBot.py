@@ -113,8 +113,8 @@ LANGUAGE_CONFIG = {
 LANG_INSTRUCTION = {
     "en":  "Respond ONLY in English.",
     "ur":  "صرف اردو میں جواب دیں۔",
-    "pa":  "ਸਿਰਫ਼ ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।",
-    "skr": "صرف سرائیکی زبان وچ جواب دیو۔",
+    "pa":  "صرف پنجابی زبان (شاہ مکھی رسم الخط) وچ جواب دیو۔ اردو وانگوں لکھی جانے والی پنجابی استعمال کرو۔ گورمکھی یا ہندی رسم الخط استعمال کرنا سخت منع ہے۔",
+    "skr": "صرف سرائیکی زبان وچ جواب دیو۔ شاہ مکھی رسم الخط استعمال کرو۔",
 }
 
 # Specialist-node system prompts per language
@@ -471,6 +471,8 @@ Extract structured information from the user query.
 Rules:
 - Detect language: "en" (English), "ur" (Urdu), "pa" (Punjabi), "skr" (Saraiki)
 - Choose ONE intent from: soil_crop | weather | market | rag_agronomy | general
+- 'weather' intent: Use for ALL questions about weather, rain, temperature, or forecasts.
+- 'soil_crop' intent: Use ONLY for soil data analysis or asking what to plant.
 - Extract soil parameters only when explicitly present (do NOT guess)
 - Extract location (city/region) if present
 - Extract crop name only if it matches the known list
