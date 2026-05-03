@@ -60,7 +60,7 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const currentlyPlayingTextRef = useRef<string | null>(null);
 
