@@ -10,9 +10,9 @@ import FloatingInputBar from "./FloatingInputBar";
 
 // ── Language config for Web APIs ─────────────────────────────────────────────
 const STT_LANG: Record<Lang, string> = {
-  en:  "en-US",
-  ur:  "ur-PK",
-  pa:  "pa-PK",
+  en: "en-US",
+  ur: "ur-PK",
+  pa: "pa-PK",
   skr: "ur-PK", // Saraiki closest to Urdu for STT
 };
 
@@ -21,9 +21,9 @@ function getBestVoice(lang: Lang): SpeechSynthesisVoice | null {
   if (typeof window === "undefined") return null;
   const voices = window.speechSynthesis.getVoices();
   const prefs: Record<Lang, string[]> = {
-    en:  ["en-US", "en-GB", "en"],
-    ur:  ["ur-PK", "ur", "ar-SA", "ar"],
-    pa:  ["pa-PK", "pa-IN", "pa", "ur-PK", "ur"],
+    en: ["en-US", "en-GB", "en"],
+    ur: ["ur-PK", "ur", "ar-SA", "ar"],
+    pa: ["pa-PK", "pa-IN", "pa", "ur-PK", "ur"],
     skr: ["ur-PK", "ur", "ar"],
   };
   for (const code of prefs[lang]) {
@@ -37,29 +37,29 @@ function getBestVoice(lang: Lang): SpeechSynthesisVoice | null {
 
 
 // ── Component ─────────────────────────────────────────────────────────────────
-interface ChatInterfaceProps { 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
+interface ChatInterfaceProps {
   lang: Lang;
   onContextChange?: (location: string | null, crop: string | null) => void;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
 export default function ChatInterface({ lang, onContextChange }: ChatInterfaceProps) {
   const t = translations[lang];
-  const isRtl  = lang === "ur" || lang === "pa" || lang === "skr";
+  const isRtl = lang === "ur" || lang === "pa" || lang === "skr";
   const isNonEn = lang !== "en";
 
-  const [messages,     setMessages]     = useState<Message[]>(initialMessages);
-  const [input,        setInput]        = useState("");
-  const [isRecording,  setIsRecording]  = useState(false);
-  const [isLoading,    setIsLoading]    = useState(false);
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [input, setInput] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [imageFile,    setImageFile]    = useState<File | null>(null);
-  const [sttError,     setSttError]     = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [sttError, setSttError] = useState<string | null>(null);
 
-  const chatEndRef  = useRef<HTMLDivElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const textareaRef  = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const currentlyPlayingTextRef = useRef<string | null>(null);
@@ -89,30 +89,30 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
       // INSTANT PLAYBACK: Set src directly to streaming URL to avoid fetch delay
       const url = `${API_BASE_URL}/api/tts?text=${encodeURIComponent(clean)}&lang=${lang}`;
       const audio = new Audio(url);
-      
+
       currentAudioRef.current = audio;
       currentlyPlayingTextRef.current = clean;
-      
+
       audio.onended = () => {
         if (currentlyPlayingTextRef.current === clean) {
           currentlyPlayingTextRef.current = null;
           currentAudioRef.current = null;
         }
       };
-      
+
       await audio.play();
     } catch (err) {
       console.error("Backend TTS failed, falling back to browser TTS", err);
       if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      
+
       const doSpeak = () => {
         const utterance = new SpeechSynthesisUtterance(clean);
-        utterance.lang   = STT_LANG[lang];
-        utterance.rate   = lang === "en" ? 1 : 0.85;
-        utterance.pitch  = 1;
+        utterance.lang = STT_LANG[lang];
+        utterance.rate = lang === "en" ? 1 : 0.85;
+        utterance.pitch = 1;
         const voice = getBestVoice(lang);
         if (voice) utterance.voice = voice;
-        
+
         currentlyPlayingTextRef.current = clean;
         utterance.onend = () => {
           if (currentlyPlayingTextRef.current === clean) {

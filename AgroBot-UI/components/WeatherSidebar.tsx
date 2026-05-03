@@ -9,6 +9,8 @@ interface WeatherSidebarProps {
   city: string;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 interface WeatherData {
   weather: {
     current: {
@@ -30,7 +32,7 @@ interface WeatherData {
 export default function WeatherSidebar({ lang, city }: WeatherSidebarProps) {
   const t = translations[lang];
   const isRtl = lang === "ur" || lang === "pa" || lang === "skr";
-  
+
   const [data, setData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +52,6 @@ export default function WeatherSidebar({ lang, city }: WeatherSidebarProps) {
 
   useEffect(() => {
     async function fetchWeather() {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       setLoading(true);
       setError(null);
       try {
@@ -128,11 +129,11 @@ export default function WeatherSidebar({ lang, city }: WeatherSidebarProps) {
         <h2 className={`text-stone-400 font-bold text-xs tracking-widest uppercase mb-3 ${isRtl ? "text-right urdu-text" : ""}`}>
           {t.weatherAlerts}
         </h2>
-        
+
         {/* Main Weather Card */}
         <div className="bg-[#C8EEE0]/30 rounded-[20px] border border-[#C8EEE0]/50 p-4 space-y-3 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 via-amber-400 to-red-400"></div>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <span className="text-3xl font-bold text-stone-800">{Math.round(current.temp_c)}°</span>
@@ -174,8 +175,8 @@ export default function WeatherSidebar({ lang, city }: WeatherSidebarProps) {
             <div key={idx} className={`flex items-center gap-3 ${isRtl ? "flex-row-reverse" : ""}`}>
               <span className={`text-xs font-bold text-stone-500 w-10 ${isRtl ? "urdu-text text-right" : "w-7"}`}>{getDayName(f.date)}</span>
               <div className="flex-1 h-1 bg-stone-100 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full ${getTempColor(f.max_temp_c)} rounded-full`} 
+                <div
+                  className={`h-full ${getTempColor(f.max_temp_c)} rounded-full`}
                   style={{ width: `${(f.max_temp_c / 50) * 100}%` }}
                 ></div>
               </div>
@@ -195,19 +196,17 @@ export default function WeatherSidebar({ lang, city }: WeatherSidebarProps) {
             { text: t.tip2, color: "orange", icon: <Thermometer size={14} /> },
             { text: t.tip3, color: "blue", icon: <CloudRain size={14} /> },
           ].map((tip, idx) => (
-            <div 
-              key={idx} 
-              className={`flex gap-4 items-center p-4 rounded-[20px] border transition-all hover:scale-[1.02] cursor-default shadow-sm ${isRtl ? "flex-row-reverse" : ""} ${
-                tip.color === "emerald" ? "bg-emerald-50 border-emerald-100 text-emerald-900" :
-                tip.color === "orange" ? "bg-orange-50 border-orange-100 text-orange-900" :
-                "bg-blue-50 border-blue-100 text-blue-900"
-              }`}
+            <div
+              key={idx}
+              className={`flex gap-4 items-center p-4 rounded-[20px] border transition-all hover:scale-[1.02] cursor-default shadow-sm ${isRtl ? "flex-row-reverse" : ""} ${tip.color === "emerald" ? "bg-emerald-50 border-emerald-100 text-emerald-900" :
+                  tip.color === "orange" ? "bg-orange-50 border-orange-100 text-orange-900" :
+                    "bg-blue-50 border-blue-100 text-blue-900"
+                }`}
             >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                tip.color === "emerald" ? "bg-emerald-200/50 text-emerald-700" :
-                tip.color === "orange" ? "bg-orange-200/50 text-orange-700" :
-                "bg-blue-200/50 text-blue-700"
-              }`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${tip.color === "emerald" ? "bg-emerald-200/50 text-emerald-700" :
+                  tip.color === "orange" ? "bg-orange-200/50 text-orange-700" :
+                    "bg-blue-200/50 text-blue-700"
+                }`}>
                 {tip.icon}
               </div>
               <p className={`text-xs font-bold leading-snug ${isRtl ? "urdu-text text-right" : ""}`}>{tip.text}</p>
