@@ -90,80 +90,102 @@ class WeatherInsightsTool(BaseAgriTool):
             if key in city_lower or city_lower in key:
                 return coords
 
-        # Try Open-Meteo geocoding API
+        import os
+        owm_key = os.getenv("OPENWEATHERMAP_API_KEY", "").strip()
+        if not owm_key:
+            return None
+
+        # Try OpenWeatherMap geocoding API
         try:
-            resp = requests.get(
-                OPEN_METEO_GEO,
-                params={"name": city, "count": 1, "language": "en", "format": "json"},
-                timeout=8,
-            )
+            url = f"http://api.openweathermap.org/geo/1.0/direct?q={city},PK&limit=1&appid={owm_key}"
+            resp = requests.get(url, timeout=8)
             if resp.status_code == 200:
                 data = resp.json()
-                results = data.get("results", [])
-                if results:
-                    r = results[0]
-                    return (r["latitude"], r["longitude"])
+                if data:
+                    return (data[0]["lat"], data[0]["lon"])
         except Exception as e:
-            print(f"⚠️  Geocoding failed: {e}")
+            print(f"⚠️  OWM Geocoding failed: {e}")
 
         return None
 
     def _fetch_forecast(self, lat: float, lon: float) -> dict | None:
-        """Fetch 7-day forecast from Open-Meteo."""
+        """Fetch 5-day forecast from OpenWeatherMap."""
+        import os
+        owm_key = os.getenv("OPENWEATHERMAP_API_KEY", "").strip()
+        if not owm_key:
+            print("⚠️ OPENWEATHERMAP_API_KEY is not set.")
+            return None
+
         try:
-            resp = requests.get(
-                OPEN_METEO_BASE,
-                params={
-                    "latitude":         lat,
-                    "longitude":        lon,
-                    "current":          "temperature_2m,precipitation,weathercode,relative_humidity_2m",
-                    "daily":            "temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,precipitation_probability_max",
-                    "timezone":         "Asia/Karachi",
-                    "forecast_days":    7,
-                    "wind_speed_unit":  "kmh",
-                },
-                timeout=10,
-            )
+            url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&appid={owm_key}"
+            resp = requests.get(url, timeout=10)
             if resp.status_code == 200:
                 return resp.json()
             else:
-                print(f"⚠️  Open-Meteo API returned status {resp.status_code}: {resp.text}")
+                print(f"⚠️  OpenWeatherMap API returned status {resp.status_code}: {resp.text}")
         except Exception as e:
-            print(f"⚠️  Open-Meteo API exception: {e}")
+            print(f"⚠️  OpenWeatherMap API exception: {e}")
         return None
 
     def _format_forecast(self, raw: dict, city: str) -> dict:
-        """Convert Open-Meteo raw JSON into a clean farming-friendly dict."""
-        current = raw.get("current", {})
-        daily   = raw.get("daily", {})
+        """Convert OpenWeatherMap raw JSON into a clean farming-friendly dict."""
+        from collections import defaultdict, Counter
+
+        list_data = raw.get("list", [])
+        
+        daily_agg = defaultdict(lambda: {
+            "max_temp_c": -999.0,
+            "min_temp_c": 999.0,
+            "rain_mm": 0.0,
+            "conditions": [],
+            "rain_probs": []
+        })
+
+        for item in list_data:
+            dt_txt = item.get("dt_txt", "").split(" ")[0]
+            if not dt_txt: continue
+            
+            temp = item["main"]["temp"]
+            rain = item.get("rain", {}).get("3h", 0)
+            cond = item["weather"][0]["description"].capitalize() if item.get("weather") else "Unknown"
+            pop  = item.get("pop", 0) * 100
+            
+            day = daily_agg[dt_txt]
+            day["max_temp_c"] = max(day["max_temp_c"], temp)
+            day["min_temp_c"] = min(day["min_temp_c"], temp)
+            day["rain_mm"] += rain
+            day["conditions"].append(cond)
+            day["rain_probs"].append(pop)
 
         days = []
-        for i, day_date in enumerate(daily.get("time", [])):
-            wmo = daily.get("weathercode", [0])[i] if i < len(daily.get("weathercode", [])) else 0
-            rain = daily.get("precipitation_sum", [0])[i] if i < len(daily.get("precipitation_sum", [])) else 0
+        for dt_txt, day in sorted(daily_agg.items()):
+            most_common_cond = Counter(day["conditions"]).most_common(1)[0][0] if day["conditions"] else "Unknown"
             days.append({
-                "date":       day_date,
-                "max_temp_c": daily.get("temperature_2m_max", [0])[i],
-                "min_temp_c": daily.get("temperature_2m_min", [0])[i],
-                "rain_mm":    round(rain, 1),
-                "condition":  WMO_CODES.get(wmo, "Unknown"),
-                "rain_prob_%": daily.get("precipitation_probability_max", [0])[i] if i < len(daily.get("precipitation_probability_max", [])) else 0,
+                "date": dt_txt,
+                "max_temp_c": round(day["max_temp_c"], 1),
+                "min_temp_c": round(day["min_temp_c"], 1),
+                "rain_mm": round(day["rain_mm"], 1),
+                "condition": most_common_cond,
+                "rain_prob_%": round(max(day["rain_probs"] or [0])),
             })
 
-        cur_wmo = current.get("weathercode", 0)
+        current = list_data[0] if list_data else {}
+        cur_main = current.get("main", {})
+        cur_weather = current.get("weather", [{}])[0]
+        
         return {
-            "city":    city,
-            "source":  "Open-Meteo (open-meteo.com)",
+            "city": city,
+            "source": "OpenWeatherMap",
             "current": {
-                "temp_c":    current.get("temperature_2m"),
-                "rain_mm":   current.get("precipitation"),
-                "humidity":  current.get("relative_humidity_2m"),
-                "condition": WMO_CODES.get(cur_wmo, "Unknown"),
+                "temp_c": round(cur_main.get("temp", 0), 1),
+                "rain_mm": round(current.get("rain", {}).get("3h", 0), 1),
+                "humidity": cur_main.get("humidity", 0),
+                "condition": cur_weather.get("description", "Unknown").capitalize(),
             },
-            "7_day_forecast": days,
+            "7_day_forecast": days, # Actually 5-day but we keep key for downstream compatibility
             "total_rain_7days_mm": round(sum(d["rain_mm"] for d in days), 1),
-            "max_rain_day":  max(days, key=lambda d: d["rain_mm"]) if days else {},
-            "max_temp_7days_c": max(d["max_temp_c"] for d in days) if days else 0,
+            "max_rain_day": max(days, key=lambda d: d["rain_mm"]) if days else {},
+            "max_temp_7days_c": max((d["max_temp_c"] for d in days), default=0),
         }
 
     def _check_extreme_risks(self, city: str, total_rain_mm: float, max_temp_c: float) -> list[str]:
