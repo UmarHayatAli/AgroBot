@@ -306,6 +306,8 @@ class DiseaseDetectorTool(BaseAgriTool):
             healthy_msgs = {
                 "en": f"✅ Your {diagnosis.get('crop', 'crop')} looks **healthy**! No disease detected. Keep up good field management practices.",
                 "ur": f"✅ آپ کی {diagnosis.get('crop', 'فصل')} **صحت مند** نظر آتی ہے! کوئی بیماری نہیں ملی۔ اچھے کاشتکاری عمل جاری رکھیں۔",
+                "pa": f"✅ تہاڈی {diagnosis.get('crop', 'فصل')} **صحت مند** اے۔ کوئی بیماری نہیں ملی۔ اچھے کاشتکاری عمل جاری رکھو۔",
+                "skr": f"✅ تہاڈی {diagnosis.get('crop', 'فصل')} **صحت مند** اے۔ کوئی بیماری کائنی ملی۔ اچھے کاشتکاری عمل جاری رکھو۔",
             }
             return {
                 "text":   healthy_msgs.get(lang, healthy_msgs["en"]),
