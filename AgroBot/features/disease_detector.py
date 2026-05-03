@@ -197,7 +197,7 @@ class DiseaseDetectorTool(BaseAgriTool):
                     }
         return None
 
-    def _generate_treatment(self, diagnosis: dict, description: str, lang: str) -> str:
+    def _generate_treatment(self, diagnosis: dict, description: str, lang: str, **kwargs) -> str:
         """Generate full treatment plan using Groq LLM."""
         lang_instr = get_lang_instruction(lang)
 

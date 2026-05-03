@@ -90,7 +90,7 @@ class SoilRecommendationTool(BaseAgriTool):
             print(f"⚠️  Soil param extraction failed: {e}")
             return {}
 
-    def _narrate_result(self, prediction: dict, query: str, lang: str) -> str:
+    def _narrate_result(self, prediction: dict, query: str, lang: str, **kwargs) -> str:
         """Convert raw XGBoost JSON into a farmer-friendly narrative."""
         lang_instr = get_lang_instruction(lang)
         try:
