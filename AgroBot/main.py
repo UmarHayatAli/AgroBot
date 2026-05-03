@@ -478,7 +478,7 @@ def dispatch(
         result = run_agrobot(user_message=query, history=history)
         return {
             "text":   result.get("text", ""),
-            "intent": "general",
+            "intent": result.get("intent", "general"),
             "lang":   result.get("lang", lang),
             "extra":  None,
             "context": {"location": location, "crop": crop}

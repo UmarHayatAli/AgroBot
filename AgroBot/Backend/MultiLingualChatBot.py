@@ -491,11 +491,22 @@ def supervisor_node(state: AgroBotState) -> AgroBotState:
             "Use this value for detected_lang unless very clearly wrong.]"
         )
 
-    result: SupervisorOutput = structured_llm.invoke([
-        SystemMessage(content=SUPERVISOR_SYSTEM + lang_hint),
-        *state["messages"],
-        HumanMessage(content=enriched_query),
-    ])
+    try:
+        result: SupervisorOutput = structured_llm.invoke([
+            SystemMessage(content=SUPERVISOR_SYSTEM + lang_hint),
+            *state["messages"],
+            HumanMessage(content=enriched_query),
+        ])
+    except Exception as e:
+        print(f"⚠️ Supervisor structured output failed: {e}")
+        # Fallback to general intent if structured output fails
+        return {
+            **state,
+            "detected_lang":  state.get("detected_lang") or detect_language_unicode(enriched_query),
+            "user_query":     enriched_query,
+            "intent":         "general",
+            "messages":       state["messages"] + [HumanMessage(content=state["user_query"])],
+        }
 
     # If audio was processed, honour the Unicode detection over LLM's guess
     final_lang = (
@@ -636,7 +647,8 @@ def weather_node(state: AgroBotState) -> AgroBotState:
 def market_node(state: AgroBotState) -> AgroBotState:
     query = state["user_query"]
     try:
-        search_result = SEARCH_TOOL.run(f"Pakistan {query} price 2026 market mandi PKR")
+        # Search for current mandi prices in Pakistan
+        search_result = SEARCH_TOOL.run(f"Pakistan {query} mandi price current month PKR")
     except Exception as e:
         search_result = f"Search unavailable: {e}"
 
