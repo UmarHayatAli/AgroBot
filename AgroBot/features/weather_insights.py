@@ -206,6 +206,7 @@ class WeatherInsightsTool(BaseAgriTool):
         lang: str = "en",
         image_path: Optional[str] = None,
         location: Optional[str] = None,
+        history: Optional[list] = None,
         **kwargs,
     ) -> dict:
         city = location or self._extract_city(query)
@@ -241,15 +242,18 @@ class WeatherInsightsTool(BaseAgriTool):
         lang_instr = get_lang_instruction(lang)
         try:
             llm   = self._get_llm()
-            chain = WEATHER_ADVISOR_TEMPLATE | llm
-            resp  = chain.invoke({
-                "location":    city,
-                "weather_json": json.dumps(weather_dict, indent=2, ensure_ascii=False),
-                "query":       query,
-                "date":        date.today().strftime("%A, %d %B %Y"),
-                "language":    lang_instr,
-                "risk_alerts": risk_alerts_str,
-            })
+            resp  = llm.invoke([
+                SystemMessage(content=WEATHER_ADVISOR_TEMPLATE.format(
+                    location=city,
+                    weather_json=json.dumps(weather_dict, indent=2, ensure_ascii=False),
+                    query=query,
+                    date=date.today().strftime("%A, %d %B %Y"),
+                    language=lang_instr,
+                    risk_alerts=risk_alerts_str
+                )),
+                *(history or []),
+                HumanMessage(content=query)
+            ])
             text = resp.content.strip()
         except Exception as e:
             print(f"⚠️  LLM weather narration failed: {e}")

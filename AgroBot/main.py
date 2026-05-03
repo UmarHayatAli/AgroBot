@@ -465,6 +465,7 @@ def dispatch(
             image_path=image_path,
             location=location,
             crop=crop,
+            history=history,
         )
         res["context"] = {"location": location, "crop": crop}
         return res

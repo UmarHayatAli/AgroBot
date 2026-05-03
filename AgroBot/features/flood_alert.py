@@ -139,9 +139,8 @@ class FloodAlertTool(BaseAgriTool):
         self,
         query: str,
         lang: str = "en",
-        image_path: Optional[str] = None,
-        location: Optional[str] = None,
         crop: Optional[str] = None,
+        history: Optional[list] = None,
         **kwargs,
     ) -> dict:
         # Extract crop and location
@@ -150,7 +149,7 @@ class FloodAlertTool(BaseAgriTool):
 
         # Get weather data via WeatherInsightsTool
         weather_tool  = WeatherInsightsTool()
-        weather_result = weather_tool.run(query=query, lang="en", location=location)
+        weather_result = weather_tool.run(query=query, lang="en", location=location, history=history)
 
         weather_extra = weather_result.get("extra", {})
         weather_data  = weather_extra.get("weather", {})
@@ -181,16 +180,19 @@ class FloodAlertTool(BaseAgriTool):
         lang_instr = get_lang_instruction(lang)
         try:
             llm   = ChatGroq(model=LLM_MODEL, temperature=0.3, api_key=GROQ_API_KEY)
-            chain = FLOOD_RISK_TEMPLATE | llm
-            resp  = chain.invoke({
-                "crop":           detected_crop.title(),
-                "location":       city,
-                "weather_json":   json.dumps(weather_summary, indent=2, ensure_ascii=False),
-                "sensitivity":    sensitivity,
-                "max_hours":      max_wl_hours,
-                "critical_stages": ", ".join(critical_stg),
-                "language":       lang_instr,
-            })
+            resp  = llm.invoke([
+                SystemMessage(content=FLOOD_RISK_TEMPLATE.format(
+                    crop=detected_crop.title(),
+                    location=city,
+                    weather_json=json.dumps(weather_summary, indent=2, ensure_ascii=False),
+                    sensitivity=sensitivity,
+                    max_hours=max_wl_hours,
+                    critical_stages=", ".join(critical_stg),
+                    language=lang_instr
+                )),
+                *(history or []),
+                HumanMessage(content=query)
+            ])
             llm_text = resp.content.strip()
         except Exception as e:
             print(f"⚠️  Flood LLM failed: {e}. Using rule-based fallback.")

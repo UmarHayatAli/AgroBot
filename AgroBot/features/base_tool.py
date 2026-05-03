@@ -33,6 +33,7 @@ class BaseAgriTool(ABC):
         query: str,
         lang: str = "en",
         image_path: Optional[str] = None,
+        history: Optional[list] = None,
         **kwargs,
     ) -> dict:
         """

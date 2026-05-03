@@ -213,18 +213,23 @@ class DiseaseDetectorTool(BaseAgriTool):
 
         try:
             llm   = ChatGroq(model=LLM_MODEL, temperature=0.3, api_key=GROQ_API_KEY)
-            chain = DISEASE_TREATMENT_TEMPLATE | llm
-            resp  = chain.invoke({
-                "crop":        diagnosis.get("crop", "Unknown"),
-                "disease":     diagnosis.get("disease", "Unknown"),
-                "symptoms":    diagnosis.get("symptoms", description),
-                "description": (
-                    f"{description or 'No description provided.'}\n"
-                    f"Chemical: {chem}\nOrganic: {organic}"
-                    if (chem or organic) else description
-                ),
-                "language":    lang_instr,
-            })
+            history = kwargs.get("history", [])
+            messages = [
+                SystemMessage(content=DISEASE_TREATMENT_TEMPLATE.format(
+                    crop=diagnosis.get("crop", "Unknown"),
+                    disease=diagnosis.get("disease", "Unknown"),
+                    symptoms=diagnosis.get("symptoms", description),
+                    description=(
+                        f"{description or 'No description provided.'}\n"
+                        f"Chemical: {chem}\nOrganic: {organic}"
+                        if (chem or organic) else description
+                    ),
+                    language=lang_instr
+                )),
+                *history,
+                HumanMessage(content=description)
+            ]
+            resp  = llm.invoke(messages)
             return resp.content.strip()
         except Exception as e:
             print(f"⚠️  Treatment LLM failed: {e}")
@@ -241,6 +246,7 @@ class DiseaseDetectorTool(BaseAgriTool):
         query: str,
         lang: str = "en",
         image_path: Optional[str] = None,
+        history: Optional[list] = None,
         **kwargs,
     ) -> dict:
         # Validate image path
@@ -276,6 +282,7 @@ class DiseaseDetectorTool(BaseAgriTool):
                         "The farmer has described some symptoms. Identify the likely disease and provide treatment.\n"
                         "Be specific about chemical names and doses."
                     )),
+                    *(history or []),
                     HumanMessage(content=query),
                 ])
                 return {
@@ -302,7 +309,7 @@ class DiseaseDetectorTool(BaseAgriTool):
             }
 
         # Generate treatment plan
-        treatment_text = self._generate_treatment(diagnosis, query, lang)
+        treatment_text = self._generate_treatment(diagnosis, query, lang, history=history)
 
         return {
             "text":   treatment_text,

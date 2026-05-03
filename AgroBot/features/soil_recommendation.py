@@ -95,12 +95,16 @@ class SoilRecommendationTool(BaseAgriTool):
         lang_instr = get_lang_instruction(lang)
         try:
             llm   = self._get_llm(temperature=0.4)
-            chain = SOIL_INTERPRETER_TEMPLATE | llm
-            resp  = chain.invoke({
-                "prediction_json": json.dumps(prediction, indent=2, ensure_ascii=False),
-                "query":           query,
-                "language":        lang_instr,
-            })
+            history = kwargs.get("history", [])
+            resp  = llm.invoke([
+                SystemMessage(content=SOIL_INTERPRETER_TEMPLATE.format(
+                    prediction_json=json.dumps(prediction, indent=2, ensure_ascii=False),
+                    query=query,
+                    language=lang_instr
+                )),
+                *history,
+                HumanMessage(content=query)
+            ])
             return resp.content.strip()
         except Exception as e:
             # Graceful fallback: format the result manually
@@ -117,6 +121,7 @@ class SoilRecommendationTool(BaseAgriTool):
         query: str,
         lang: str = "en",
         image_path: Optional[str] = None,
+        history: Optional[list] = None,
         **kwargs,
     ) -> dict:
         """
@@ -144,7 +149,7 @@ class SoilRecommendationTool(BaseAgriTool):
             prediction = _mock_predict(soil_params)
 
         # Step 3: Generate narrative response
-        text = self._narrate_result(prediction, query, lang)
+        text = self._narrate_result(prediction, query, lang, history=history)
 
         return {
             "text":   text,
