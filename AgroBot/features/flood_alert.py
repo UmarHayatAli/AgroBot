@@ -180,19 +180,23 @@ class FloodAlertTool(BaseAgriTool):
         lang_instr = get_lang_instruction(lang)
         try:
             llm   = ChatGroq(model=LLM_MODEL, temperature=0.3, api_key=GROQ_API_KEY)
-            resp  = llm.invoke([
-                SystemMessage(content=FLOOD_RISK_TEMPLATE.format(
-                    crop=detected_crop.title(),
-                    location=city,
-                    weather_json=json.dumps(weather_summary, indent=2, ensure_ascii=False),
-                    sensitivity=sensitivity,
-                    max_hours=max_wl_hours,
-                    critical_stages=", ".join(critical_stg),
-                    language=lang_instr
-                )),
+            prompt_msgs = FLOOD_RISK_TEMPLATE.invoke({
+                "crop":           detected_crop.title(),
+                "location":       city,
+                "weather_json":   json.dumps(weather_summary, indent=2, ensure_ascii=False),
+                "sensitivity":    sensitivity,
+                "max_hours":      max_wl_hours,
+                "critical_stages": ", ".join(critical_stg),
+                "language":       lang_instr,
+            })
+            
+            messages = [
+                prompt_msgs.to_messages()[0],
                 *(history or []),
-                HumanMessage(content=query)
-            ])
+                prompt_msgs.to_messages()[1]
+            ]
+            
+            resp  = llm.invoke(messages)
             llm_text = resp.content.strip()
         except Exception as e:
             print(f"⚠️  Flood LLM failed: {e}. Using rule-based fallback.")

@@ -242,18 +242,22 @@ class WeatherInsightsTool(BaseAgriTool):
         lang_instr = get_lang_instruction(lang)
         try:
             llm   = self._get_llm()
-            resp  = llm.invoke([
-                SystemMessage(content=WEATHER_ADVISOR_TEMPLATE.format(
-                    location=city,
-                    weather_json=json.dumps(weather_dict, indent=2, ensure_ascii=False),
-                    query=query,
-                    date=date.today().strftime("%A, %d %B %Y"),
-                    language=lang_instr,
-                    risk_alerts=risk_alerts_str
-                )),
+            prompt_msgs = WEATHER_ADVISOR_TEMPLATE.invoke({
+                "location":    city,
+                "weather_json": json.dumps(weather_dict, indent=2, ensure_ascii=False),
+                "query":       query,
+                "date":        date.today().strftime("%A, %d %B %Y"),
+                "language":    lang_instr,
+                "risk_alerts": risk_alerts_str,
+            })
+            
+            messages = [
+                prompt_msgs.to_messages()[0],
                 *(history or []),
-                HumanMessage(content=query)
-            ])
+                prompt_msgs.to_messages()[1]
+            ]
+            
+            resp  = llm.invoke(messages)
             text = resp.content.strip()
         except Exception as e:
             print(f"⚠️  LLM weather narration failed: {e}")

@@ -96,15 +96,19 @@ class SoilRecommendationTool(BaseAgriTool):
         try:
             llm   = self._get_llm(temperature=0.4)
             history = kwargs.get("history", [])
-            resp  = llm.invoke([
-                SystemMessage(content=SOIL_INTERPRETER_TEMPLATE.format(
-                    prediction_json=json.dumps(prediction, indent=2, ensure_ascii=False),
-                    query=query,
-                    language=lang_instr
-                )),
+            prompt_msgs = SOIL_INTERPRETER_TEMPLATE.invoke({
+                "prediction_json": json.dumps(prediction, indent=2, ensure_ascii=False),
+                "query":           query,
+                "language":        lang_instr,
+            })
+            
+            messages = [
+                prompt_msgs.to_messages()[0],
                 *history,
-                HumanMessage(content=query)
-            ])
+                prompt_msgs.to_messages()[1]
+            ]
+            
+            resp  = llm.invoke(messages)
             return resp.content.strip()
         except Exception as e:
             # Graceful fallback: format the result manually

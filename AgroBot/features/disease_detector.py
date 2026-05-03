@@ -214,21 +214,27 @@ class DiseaseDetectorTool(BaseAgriTool):
         try:
             llm   = ChatGroq(model=LLM_MODEL, temperature=0.3, api_key=GROQ_API_KEY)
             history = kwargs.get("history", [])
+            
+            # Use the template to get base messages
+            prompt_msgs = DISEASE_TREATMENT_TEMPLATE.invoke({
+                "crop":        diagnosis.get("crop", "Unknown"),
+                "disease":     diagnosis.get("disease", "Unknown"),
+                "symptoms":    diagnosis.get("symptoms", description),
+                "description": (
+                    f"{description or 'No description provided.'}\n"
+                    f"Chemical: {chem}\nOrganic: {organic}"
+                    if (chem or organic) else description
+                ),
+                "language":    lang_instr,
+            })
+            
+            # Combine: [SystemMessage, ...History, HumanMessage]
             messages = [
-                SystemMessage(content=DISEASE_TREATMENT_TEMPLATE.format(
-                    crop=diagnosis.get("crop", "Unknown"),
-                    disease=diagnosis.get("disease", "Unknown"),
-                    symptoms=diagnosis.get("symptoms", description),
-                    description=(
-                        f"{description or 'No description provided.'}\n"
-                        f"Chemical: {chem}\nOrganic: {organic}"
-                        if (chem or organic) else description
-                    ),
-                    language=lang_instr
-                )),
+                prompt_msgs.to_messages()[0], # System message from template
                 *history,
-                HumanMessage(content=description)
+                prompt_msgs.to_messages()[1]  # Human message from template
             ]
+            
             resp  = llm.invoke(messages)
             return resp.content.strip()
         except Exception as e:
