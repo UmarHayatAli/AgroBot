@@ -382,7 +382,7 @@ def get_llm(temperature: float = 0.3) -> ChatGroq:
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key:
         raise EnvironmentError("GROQ_API_KEY is not set.")
-    return ChatGroq(model="llama-3.3-70b-versatile", temperature=temperature, api_key=api_key)
+    return ChatGroq(model="llama-3.1-8b-instant", temperature=temperature, api_key=api_key)
 
 def get_groq_client() -> Groq:
     api_key = os.getenv("GROQ_API_KEY", "")

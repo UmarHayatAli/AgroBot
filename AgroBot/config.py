@@ -25,8 +25,8 @@ MODELS_DIR   = BACKEND_DIR / "Models"
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
 GROQ_API_KEY   = os.getenv("GROQ_API_KEY", "")
-LLM_MODEL      = "llama-3.3-70b-versatile"        # Primary Groq model
-VISION_MODEL   = "meta-llama/llama-4-scout-17b-16e-instruct"  # Groq vision model
+LLM_MODEL      = "llama-3.1-8b-instant"            # Switched to 8B for better speed/rate-limits
+VISION_MODEL   = "llama-3.2-11b-vision-preview"    # Official Groq vision model
 WHISPER_MODEL  = "whisper-large-v3"               # Groq STT
 
 # ── Optional / Third-party APIs ───────────────────────────────────────────────
