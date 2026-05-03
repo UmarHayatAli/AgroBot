@@ -47,7 +47,7 @@ class RouterOutput(BaseModel):
 ROUTER_SYSTEM = """You are AgroBot's intent router for a Pakistani agricultural chatbot.
 
 Analyze the user's query and return:
-- detected_lang: "en" (English), "ur" (Urdu/Arabic script), "pa" (Punjabi/Gurmukhi), "skr" (Saraiki)
+- detected_lang: "en" (English), "ur" (Urdu/Arabic script), "pa" (Punjabi/Shahmukhi), "skr" (Saraiki)
 - intent: ONE of these:
     soil_crop    → soil analysis, crop recommendation, EC, pH, salinity, NPK, yield
     weather      → weather forecast, rain, temperature, climate, when to plant/irrigate
