@@ -451,8 +451,10 @@ def dispatch(
     # Auto-detection is only used as a fallback if lang is missing.
     lang = lang or route.detected_lang or "en"
     
-    location = route.location
-    crop     = route.detected_crop
+    # Context Persistence: if the router misses the location/crop (e.g. in short follow-up questions),
+    # fall back to the session memory's context.
+    location = route.location or memory.context.get("location")
+    crop     = route.detected_crop or memory.context.get("crop")
 
     console.print(f"  [dim]Intent: {intent_label(intent)} | Lang: {lang} | Location: {location or '?'}[/]")
 
@@ -476,7 +478,13 @@ def dispatch(
         if str(backend_dir) not in sys.path:
             sys.path.insert(0, str(backend_dir))
         from MultiLingualChatBot import run_agrobot
-        result = run_agrobot(user_message=query, history=history, lang=lang)
+        result = run_agrobot(
+            user_message=query, 
+            history=history, 
+            lang=lang,
+            location=location,
+            crop=crop
+        )
         return {
             "text":   result.get("text", ""),
             "intent": result.get("intent", "general"),

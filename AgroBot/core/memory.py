@@ -19,6 +19,7 @@ class ConversationMemory:
         """
         self.max_turns = max_turns
         self._messages: list = []
+        self.context = {"location": None, "crop": None}
 
     def add_exchange(self, user_text: str, bot_text: str) -> None:
         """Add a user query + bot response to memory."""
@@ -30,13 +31,21 @@ class ConversationMemory:
         if len(self._messages) > max_msgs:
             self._messages = self._messages[-max_msgs:]
 
+    def update_context(self, location: str = None, crop: str = None) -> None:
+        """Update the persistent context with new extracted entities."""
+        if location:
+            self.context["location"] = location
+        if crop:
+            self.context["crop"] = crop
+
     def get_messages(self) -> list:
         """Return the full message history list."""
         return list(self._messages)
 
     def clear(self) -> None:
-        """Reset conversation history."""
+        """Reset conversation history and context."""
         self._messages = []
+        self.context = {"location": None, "crop": None}
 
     def turn_count(self) -> int:
         """Return number of completed turns."""

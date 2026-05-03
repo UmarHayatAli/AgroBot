@@ -100,9 +100,12 @@ async def chat_endpoint(
             tf.write(await file.read())
             image_path = tf.name
             
-    # If no query and no image, provide a default query for the LLM or handle it
-    if not query and not image_path:
-        query = "Hello"
+    # Default queries if missing
+    if not query:
+        if image_path:
+            query = "Please analyze this image."
+        else:
+            query = "Hello"
         
     try:
         # dispatch returns a dictionary like: 
@@ -110,8 +113,13 @@ async def chat_endpoint(
         result = dispatch(query, lang, image_path, memory)
         
         response_text = result.get("text", "")
-        if query and response_text:
+        if response_text:
             memory.add_exchange(query, response_text)
+            
+        # Update persistent context with newly detected location/crop
+        ctx = result.get("context", {})
+        if ctx:
+            memory.update_context(location=ctx.get("location"), crop=ctx.get("crop"))
             
         if image_path and os.path.exists(image_path):
             os.remove(image_path)

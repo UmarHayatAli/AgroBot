@@ -672,7 +672,8 @@ def market_node(state: AgroBotState) -> AgroBotState:
 
     try:
         # 2. Try web search for 5 seconds max
-        search_result = SEARCH_TOOL.run(f"Pakistan {query} mandi price current month PKR")
+        search_topic = state.get("detected_crop") or query
+        search_result = SEARCH_TOOL.run(f"Pakistan {search_topic} mandi price current month PKR")
         if not search_result or len(search_result) < 20:
              search_result = "Recent web data unavailable. Using built-in reference prices."
     except Exception as e:
@@ -727,7 +728,7 @@ def rag_node(state: AgroBotState) -> AgroBotState:
             context = "No relevant context found."
 
     lang = state["detected_lang"]
-    llm  = get_llm(temperature=0.4)
+    llm  = get_llm(temperature=0.2)
     response = llm.invoke([
         SystemMessage(content=_lang_prompt("rag", lang)),
         *state["messages"],
@@ -750,7 +751,7 @@ def rag_node(state: AgroBotState) -> AgroBotState:
 
 def general_node(state: AgroBotState) -> AgroBotState:
     lang = state["detected_lang"]
-    llm  = get_llm(temperature=0.5)
+    llm  = get_llm(temperature=0.3)
     response = llm.invoke([
         SystemMessage(content=_lang_prompt("general", lang)),
         *state["messages"],
@@ -911,6 +912,8 @@ def run_agrobot(
     audio_ext:     str   = "wav",
     audio_output:  bool  = False,
     lang:          str   = "",   # UI-selected language — overrides auto-detection
+    location:      str   = None,
+    crop:          str   = None,
 ) -> dict:
     """
     Main entry point for the AgroBot agent.
@@ -942,8 +945,8 @@ def run_agrobot(
         "market_result":     None,
         "rag_result":        None,
         "final_response":    None,
-        "detected_crop":     None,
-        "location":          None,
+        "detected_crop":     crop,
+        "location":          location,
         # audio fields
         "audio_input":       audio_bytes,
         "audio_ext":         audio_ext,
