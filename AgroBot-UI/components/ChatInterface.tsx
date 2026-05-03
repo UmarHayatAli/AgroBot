@@ -249,7 +249,7 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
         id: (Date.now() + 1).toString(),
         role: "bot",
         text: botText,
-        intent: intent,
+        intent: intent as "weather" | "disease" | "soil" | "flood" | "general" | undefined,
         timestamp: new Date(),
       };
 
