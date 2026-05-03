@@ -56,6 +56,7 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [sttError, setSttError] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>(""); // ← memory key
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -225,6 +226,7 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
       const formData = new FormData();
       formData.append("query", text);
       formData.append("lang", lang);
+      formData.append("session_id", sessionId); // ← send session for memory
       if (imageFile) {
         console.log("Appending file to formData:", imageFile.name);
         formData.append("file", imageFile);
@@ -241,6 +243,8 @@ export default function ChatInterface({ lang, onContextChange }: ChatInterfacePr
       if (data && data.result) {
         botText = data.result.text || "No response text.";
         intent = data.result.intent || "general";
+        // Store session_id so next message uses same memory
+        if (data.session_id && !sessionId) setSessionId(data.session_id);
       } else if (data && data.error) {
         botText = `Error: ${data.error}`;
       }
