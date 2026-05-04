@@ -1,112 +1,32 @@
-# ================================
+# Root .gitignore for AgroBot project
 
-# 🐍 Python
-
-# ================================
-
-**pycache**/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-
-# Virtual environments
-
+# Dependencies
+node_modules/
 venv/
-.env/
-.env.*
-
-# ================================
-
-# 🔐 Secrets / Environment
-
-# ================================
-
 .env
 .env.local
+.env.*
+!.env.example
 
-# ================================
+# Build/output
+.next/
+dist/
+build/
 
-# 🧠 ML Models (VERY IMPORTANT)
-
-# ================================
-
-
-# ================================
-
-# 📊 Data Files (optional - depends)
-
-# ================================
-
-
-
-# If you WANT to keep dataset, comment above and use:
-
-# !Backend/Crop_recommendation.csv
-
-# ================================
-
-# 🧠 Vector DB (Chroma)
-
-# ================================
-
-Backend/chroma_db/
-
-# ================================
-
-# 📂 Knowledge Base (your call)
-
-# ================================
-
-# If static docs → keep
-
-# If large / generated → ignore
-
-# Backend/knowledge-base/
-
-# ================================
-
-# 🧪 Testing / temp
-
-# ================================
-
-*.log
-*.tmp
-*.cache
-
-# ================================
-
-# 🖥️ OS Files
-
-# ================================
-
-.DS_Store
-Thumbs.db
-
-# ================================
-
-# 🧰 IDEs
-
-# ================================
-
+# IDEs
 .vscode/
 .idea/
 
-# ================================
+# Junk / temporary files
+junk/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
 
-# 📦 Build / dist
-
-# ================================
-
-build/
-dist/
-*.egg-info/
-
-# ================================
-
-# 🚫 Misc
-
-# ================================
-
-*.zip
-*.tar.gz
+# Antigravity artifacts (optional - usually better to keep them out of main repo)
+implementation_plan.md
+task.md
+walkthrough.md
+suggestion.md
+Backend/chroma_db/
