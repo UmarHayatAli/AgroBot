@@ -30,3 +30,8 @@ task.md
 walkthrough.md
 suggestion.md
 Backend/chroma_db/
+**pycache**/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
