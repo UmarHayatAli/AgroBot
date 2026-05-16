@@ -1,0 +1,172 @@
+{
+  "diseases": [
+    {
+      "id": "wheat_rust_yellow",
+      "name": "Yellow Rust (Stripe Rust)",
+      "urdu_name": "گیہوں کا زنگ (پیلا زنگ)",
+      "crops": ["wheat"],
+      "keywords": ["yellow stripe", "yellow powder", "stripe", "پیلا زنگ", "دھاریاں"],
+      "symptoms": "Yellow-orange stripes along leaf veins, powdery spores",
+      "chemical_treatment": "Spray Propiconazole 25% EC at 0.1% concentration. Apply 2-3 times at 10-day intervals.",
+      "organic_treatment": "Apply sulfur dust 20 kg/acre. Improve field ventilation by thinning plant density.",
+      "urgency": "high",
+      "season": "winter-spring"
+    },
+    {
+      "id": "wheat_rust_brown",
+      "name": "Brown Rust (Leaf Rust)",
+      "urdu_name": "بھورا زنگ",
+      "crops": ["wheat"],
+      "keywords": ["brown rust", "orange spots", "leaf rust", "بھورا زنگ"],
+      "symptoms": "Small orange-brown pustules on upper leaf surface",
+      "chemical_treatment": "Spray Tebuconazole 25.9% EW at 200ml/acre. Repeat after 14 days if needed.",
+      "organic_treatment": "Remove infected plant debris. Apply neem oil spray (5ml/L water).",
+      "urgency": "medium",
+      "season": "spring"
+    },
+    {
+      "id": "cotton_CLCuV",
+      "name": "Cotton Leaf Curl Virus (CLCuV)",
+      "urdu_name": "کپاس کا پتہ مروڑ وائرس",
+      "crops": ["cotton"],
+      "keywords": ["leaf curl", "curl", "whitefly", "مروڑ", "پتہ مڑنا", "سفید مکھی"],
+      "symptoms": "Upward curling leaves, dark veins, small leaf-like outgrowths (enations)",
+      "chemical_treatment": "Control whitefly vector: Imidacloprid 200 SL at 200ml/acre. No cure for virus — remove infected plants.",
+      "organic_treatment": "Install yellow sticky traps. Apply neem-based pesticide. Plant resistant varieties like MNH-886.",
+      "urgency": "critical",
+      "season": "kharif"
+    },
+    {
+      "id": "cotton_boll_rot",
+      "name": "Boll Rot",
+      "urdu_name": "ٹینڈہ سڑاند",
+      "crops": ["cotton"],
+      "keywords": ["boll rot", "rotting boll", "ٹینڈہ سڑنا", "سڑاند"],
+      "symptoms": "Soft, water-soaked bolls that turn brown and rot",
+      "chemical_treatment": "Spray Mancozeb 80% WP at 2 g/L. Apply copper oxychloride 50% WP at 3g/L.",
+      "organic_treatment": "Improve drainage. Avoid overhead irrigation. Remove and destroy infected bolls.",
+      "urgency": "medium",
+      "season": "kharif"
+    },
+    {
+      "id": "rice_blast",
+      "name": "Rice Blast",
+      "urdu_name": "چاول کا بلاسٹ",
+      "crops": ["rice"],
+      "keywords": ["blast", "lesion", "diamond shaped", "چاول بلاسٹ", "چاول کی بیماری"],
+      "symptoms": "Diamond-shaped gray lesions with brown borders on leaves and neck",
+      "chemical_treatment": "Spray Tricyclazole 75% WP at 300g/acre or Azoxystrobin 23% SC at 200ml/acre.",
+      "organic_treatment": "Apply silicon-rich amendments. Avoid excess nitrogen. Use resistant varieties like Basmati-515.",
+      "urgency": "high",
+      "season": "kharif"
+    },
+    {
+      "id": "rice_sheath_blight",
+      "name": "Sheath Blight",
+      "urdu_name": "خول گلن",
+      "crops": ["rice"],
+      "keywords": ["sheath blight", "sheath", "خول گلن", "خول"],
+      "symptoms": "Oval lesions on leaf sheaths with gray centers and brown margins",
+      "chemical_treatment": "Spray Hexaconazole 5% EC at 400ml/acre. Apply at tillering stage.",
+      "organic_treatment": "Reduce plant density. Apply Trichoderma viride 2.5 kg/acre mixed in FYM.",
+      "urgency": "medium",
+      "season": "kharif"
+    },
+    {
+      "id": "tomato_late_blight",
+      "name": "Late Blight",
+      "urdu_name": "دیر سے بلائٹ",
+      "crops": ["tomato", "potato"],
+      "keywords": ["late blight", "blight", "water soaked", "brown patch", "آلو بلائٹ", "ٹماٹر بلائٹ"],
+      "symptoms": "Water-soaked dark patches on leaves, white mold under leaves",
+      "chemical_treatment": "Spray Mancozeb 2g/L + Metalaxyl 0.5g/L. Repeat every 7 days in humid weather.",
+      "organic_treatment": "Apply copper-based fungicide. Remove infected plant parts. Improve air circulation.",
+      "urgency": "high",
+      "season": "winter"
+    },
+    {
+      "id": "maize_stem_borer",
+      "name": "Stem Borer",
+      "urdu_name": "تنے کا چھیدک",
+      "crops": ["maize", "sugarcane"],
+      "keywords": ["stem borer", "boring", "dead heart", "تنے کا چھیدک", "ڈیڈ ہارٹ"],
+      "symptoms": "Small holes in stem, dead central shoot (dead heart), frass visible",
+      "chemical_treatment": "Apply Chlorpyriphos 20 EC at 1.5L/acre. Use Fipronil 5% SC for severe infestation.",
+      "organic_treatment": "Release Trichogramma parasitoid cards 50,000/acre. Apply neem seed kernel extract 5%.",
+      "urgency": "medium",
+      "season": "kharif"
+    },
+    {
+      "id": "sugarcane_redrot",
+      "name": "Red Rot",
+      "urdu_name": "سرخ سڑاند",
+      "crops": ["sugarcane"],
+      "keywords": ["red rot", "red stalk", "سرخ سڑاند", "گنے کی سڑاند"],
+      "symptoms": "Red discoloration inside the stalk with white patches, foul smell",
+      "chemical_treatment": "No effective chemical cure. Destroy infected stools. Treat seed material with Carbendazim 50% WP (1g/L).",
+      "organic_treatment": "Use disease-free seed material. Plant resistant varieties like CPF-246. Avoid waterlogging.",
+      "urgency": "critical",
+      "season": "year-round"
+    },
+    {
+      "id": "potato_early_blight",
+      "name": "Early Blight",
+      "urdu_name": "آلو کی ابتدائی بلائٹ",
+      "crops": ["potato", "tomato"],
+      "keywords": ["early blight", "target spots", "concentric rings", "ابتدائی بلائٹ"],
+      "symptoms": "Dark brown concentric ring spots on older leaves (target board pattern)",
+      "chemical_treatment": "Spray Mancozeb 80% WP at 2.5g/L every 7-10 days. Chlorothalonil 75% WP is also effective.",
+      "organic_treatment": "Crop rotation with non-solanaceous crops. Apply compost to improve soil health.",
+      "urgency": "medium",
+      "season": "winter"
+    },
+    {
+      "id": "aphid_infestation",
+      "name": "Aphid Infestation",
+      "urdu_name": "تیلہ / چیپا",
+      "crops": ["wheat", "cotton", "canola", "sunflower"],
+      "keywords": ["aphid", "louse", "sticky", "تیلہ", "چیپا", "لوز"],
+      "symptoms": "Small green/black insects on leaves, sticky honeydew, yellowing leaves",
+      "chemical_treatment": "Spray Imidacloprid 200 SL at 80ml/acre or Dimethoate 40 EC at 500ml/acre.",
+      "organic_treatment": "Spray soapy water (5g soap/L). Introduce ladybird beetles. Apply neem oil 5ml/L.",
+      "urgency": "medium",
+      "season": "all"
+    },
+    {
+      "id": "powdery_mildew",
+      "name": "Powdery Mildew",
+      "urdu_name": "سفید چورا",
+      "crops": ["wheat", "mango", "peas", "cucumber"],
+      "keywords": ["powdery mildew", "white powder", "white coating", "سفید چورا", "سفید پاؤڈر"],
+      "symptoms": "White powdery coating on leaves, shoots, and fruits",
+      "chemical_treatment": "Spray Sulfur 80% WP at 2g/L or Hexaconazole 5% SC at 1ml/L.",
+      "organic_treatment": "Spray diluted milk (1:10 ratio). Baking soda solution (5g/L). Improve air circulation.",
+      "urgency": "low",
+      "season": "spring"
+    },
+    {
+      "id": "mango_malformation",
+      "name": "Mango Malformation",
+      "urdu_name": "آم کی خرابی",
+      "crops": ["mango"],
+      "keywords": ["malformation", "bunchy top", "آم خرابی", "آم کی بیماری"],
+      "symptoms": "Abnormal bunchy vegetative/floral shoots, reduced fruit set",
+      "chemical_treatment": "Spray NAA (Naphthalene Acetic Acid) at 200ppm before flowering. Remove infected tissue.",
+      "organic_treatment": "Prune and burn malformed shoots. Apply Trichoderma to soil.",
+      "urgency": "medium",
+      "season": "winter-spring"
+    },
+    {
+      "id": "locust_attack",
+      "name": "Locust Attack",
+      "urdu_name": "ٹڈی دل حملہ",
+      "crops": ["wheat", "cotton", "maize", "rice"],
+      "keywords": ["locust", "swarm", "ٹڈی", "ٹڈیاں", "جھنڈ"],
+      "symptoms": "Large swarms of insects stripping plants completely in hours",
+      "chemical_treatment": "Emergency: Spray Malathion 96% ULV at 600ml/ha by air or ground rig. Contact NDMA immediately.",
+      "organic_treatment": "Deploy noise-makers and reflective materials. Biopesticide: Metarhizium anisopliae fungal spray.",
+      "urgency": "critical",
+      "season": "all"
+    }
+  ]
+}

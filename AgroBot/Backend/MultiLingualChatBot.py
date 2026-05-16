@@ -113,8 +113,8 @@ LANGUAGE_CONFIG = {
 LANG_INSTRUCTION = {
     "en":  "Respond ONLY in English.",
     "ur":  "صرف اردو میں جواب دیں۔",
-    "pa":  "ਸਿਰਫ਼ ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।",
-    "skr": "صرف سرائیکی زبان وچ جواب دیو۔",
+    "pa":  "صرف پنجابی زبان (شاہ مکھی رسم الخط) وچ جواب دیو۔ اردو وانگوں لکھی جانے والی پنجابی استعمال کرو۔ گورمکھی یا ہندی رسم الخط استعمال کرنا سخت منع ہے۔",
+    "skr": "صرف سرائیکی زبان وچ جواب دیو۔ شاہ مکھی رسم الخط استعمال کرو۔",
 }
 
 # Specialist-node system prompts per language
@@ -146,20 +146,24 @@ NODE_PROMPTS = {
     },
     "weather": {
         "en": (
+            "LANGUAGE: Respond ONLY in English.\n"
             "You are AgroBot's weather-advisory agent for Pakistani farmers. "
             "Given weather data (JSON), provide: (1) conditions summary, "
             "(2) agronomic implication, (3) one actionable tip. Under 150 words."
         ),
         "ur": (
+            "زبان: صرف اردو میں جواب دیں۔\n"
             "آپ پاکستانی کسانوں کے لیے AgroBot کے موسمی مشیر ہیں۔ "
-            "موسمی ڈیٹا (JSON) کی بنیاد پر: (1) موجودہ حالات، "
+            "موسمی ڈیٹا کی بنیاد پر: (1) موجودہ حالات، "
             "(2) زرعی اثرات، (3) ایک عملی مشورہ دیں۔ 150 الفاظ سے کم۔"
         ),
         "pa": (
-            "ਤੁਸੀਂ ਪਾਕਿਸਤਾਨੀ ਕਿਸਾਨਾਂ ਲਈ AgroBot ਦੇ ਮੌਸਮ ਸਲਾਹਕਾਰ ਹੋ। "
-            "ਮੌਸਮ ਡੇਟਾ ਤੋਂ: (1) ਮੌਜੂਦਾ ਹਾਲਾਤ, (2) ਖੇਤੀ ਪ੍ਰਭਾਵ, (3) ਇੱਕ ਸੁਝਾਅ। 150 ਸ਼ਬਦਾਂ ਤੋਂ ਘੱਟ।"
+            "زبان: صرف پنجابی (شاہ مکھی) وچ جواب دیو۔\n"
+            "تُساں پاکستانی کساناں لئی AgroBot دے موسمی مشیر ہو۔ "
+            "موسمی ڈیٹا توں: (1) موجودہ حالات، (2) زرعی اثرات، (3) اک مشورہ۔ 150 لفظاں توں گھٹ۔"
         ),
         "skr": (
+            "زبان: صرف سرائیکی وچ جواب دیو۔\n"
             "تُساں پاکستانی کساناں لئی AgroBot دے موسمی مشیر ہو۔ "
             "موسمی ڈیٹا توں: (1) موجودہ حالات، (2) زرعی اثرات، (3) اک عملی صلاح۔ 150 لفظاں توں گھٹ۔"
         ),
@@ -212,18 +216,22 @@ NODE_PROMPTS = {
     },
     "general": {
         "en": (
+            "LANGUAGE: Respond ONLY in English.\n"
             "You are AgroBot, a friendly AI assistant for Pakistani farmers. "
             "Answer helpfully. If out of scope, redirect to farming topics. Under 120 words."
         ),
         "ur": (
+            "زبان: صرف اردو میں جواب دیں۔\n"
             "آپ AgroBot ہیں، پاکستانی کسانوں کے لیے ایک دوستانہ AI مددگار۔ "
             "مددگار جواب دیں۔ اگر موضوع سے باہر ہو تو زراعت کی طرف رہنمائی کریں۔ 120 الفاظ سے کم۔"
         ),
         "pa": (
-            "ਤੁਸੀਂ AgroBot ਹੋ, ਪਾਕਿਸਤਾਨੀ ਕਿਸਾਨਾਂ ਲਈ ਇੱਕ ਦੋਸਤਾਨਾ AI ਸਹਾਇਕ। "
-            "ਮਦਦਗਾਰ ਜਵਾਬ ਦਿਓ। ਜੇ ਵਿਸ਼ੇ ਤੋਂ ਬਾਹਰ ਹੈ ਤਾਂ ਖੇਤੀ ਵੱਲ ਰਹਿਨੁਮਾਈ ਕਰੋ। 120 ਸ਼ਬਦਾਂ ਤੋਂ ਘੱਟ।"
+            "زبان: صرف پنجابی (شاہ مکھی) وچ جواب دیو۔\n"
+            "تُساں AgroBot ہو، پاکستانی کساناں لئی اک دوستانہ AI مددگار۔ "
+            "مددگار جواب دیو۔ جے موضوع توں باہر ہووے تاں زراعت ول رہنمائی کرو۔ 120 لفظاں توں گھٹ۔"
         ),
         "skr": (
+            "زبان: صرف سرائیکی وچ جواب دیو۔\n"
             "تُساں AgroBot ہو، پاکستانی کساناں لئی اک دوستانہ AI مددگار۔ "
             "مددگار جواب دیو۔ جے موضوع توں باہر ہووے تاں زراعت ول رہنمائی کرو۔ 120 لفظاں توں گھٹ۔"
         ),
@@ -382,7 +390,7 @@ def get_llm(temperature: float = 0.3) -> ChatGroq:
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key:
         raise EnvironmentError("GROQ_API_KEY is not set.")
-    return ChatGroq(model="openai/gpt-oss-120b", temperature=temperature, api_key=api_key)
+    return ChatGroq(model="llama-3.1-8b-instant", temperature=temperature, api_key=api_key)
 
 def get_groq_client() -> Groq:
     api_key = os.getenv("GROQ_API_KEY", "")
@@ -471,6 +479,8 @@ Extract structured information from the user query.
 Rules:
 - Detect language: "en" (English), "ur" (Urdu), "pa" (Punjabi), "skr" (Saraiki)
 - Choose ONE intent from: soil_crop | weather | market | rag_agronomy | general
+- 'weather' intent: Use for ALL questions about weather, rain, temperature, or forecasts.
+- 'soil_crop' intent: Use ONLY for soil data analysis or asking what to plant.
 - Extract soil parameters only when explicitly present (do NOT guess)
 - Extract location (city/region) if present
 - Extract crop name only if it matches the known list
@@ -491,11 +501,22 @@ def supervisor_node(state: AgroBotState) -> AgroBotState:
             "Use this value for detected_lang unless very clearly wrong.]"
         )
 
-    result: SupervisorOutput = structured_llm.invoke([
-        SystemMessage(content=SUPERVISOR_SYSTEM + lang_hint),
-        *state["messages"],
-        HumanMessage(content=enriched_query),
-    ])
+    try:
+        result: SupervisorOutput = structured_llm.invoke([
+            SystemMessage(content=SUPERVISOR_SYSTEM + lang_hint),
+            *state["messages"],
+            HumanMessage(content=enriched_query),
+        ])
+    except Exception as e:
+        print(f"⚠️ Supervisor structured output failed: {e}")
+        # Fallback to general intent if structured output fails
+        return {
+            **state,
+            "detected_lang":  state.get("detected_lang") or detect_language_unicode(enriched_query),
+            "user_query":     enriched_query,
+            "intent":         "general",
+            "messages":       state["messages"] + [HumanMessage(content=state["user_query"])],
+        }
 
     # If audio was processed, honour the Unicode detection over LLM's guess
     final_lang = (
@@ -635,17 +656,37 @@ def weather_node(state: AgroBotState) -> AgroBotState:
 
 def market_node(state: AgroBotState) -> AgroBotState:
     query = state["user_query"]
+    
+    # 1. Built-in Reference Prices (Pakistan Mandi - May 2024 Estimates)
+    # This ensures the LLM always has an answer even if search fails.
+    REFERENCE_PRICES = """
+    CURRENT MARKET ESTIMATES (May 2024 - PKR per 40kg/maund):
+    - Wheat (Gandum): 3,200 - 3,600 PKR
+    - Cotton (Phutti): 7,500 - 9,200 PKR
+    - Rice (Basmati): 7,500 - 9,500 PKR
+    - Maize (Makai): 2,200 - 2,600 PKR
+    - Sugarcane (Kamad): 400 - 450 PKR
+    - Onion (Piyaz): 4,000 - 6,000 PKR
+    - Potato (Aloo): 2,500 - 3,500 PKR
+    """
+
     try:
-        search_result = SEARCH_TOOL.run(f"Pakistan {query} price 2026 market mandi PKR")
+        # 2. Try web search for 5 seconds max
+        search_topic = state.get("detected_crop") or query
+        search_result = SEARCH_TOOL.run(f"Pakistan {search_topic} mandi price current month PKR")
+        if not search_result or len(search_result) < 20:
+             search_result = "Recent web data unavailable. Using built-in reference prices."
     except Exception as e:
-        search_result = f"Search unavailable: {e}"
+        print(f"⚠️ Market Search failed: {e}")
+        search_result = "Search tool offline. Using built-in reference prices."
 
     lang = state["detected_lang"]
     llm  = get_llm(temperature=0.3)
     response = llm.invoke([
-        SystemMessage(content=_lang_prompt("market", lang)),
+        SystemMessage(content=_lang_prompt("market", lang) + "\nNote: If search results are missing, use the REFERENCE_PRICES below."),
         HumanMessage(content=(
-            f"Search results:\n{search_result}\n\n"
+            f"{REFERENCE_PRICES}\n\n"
+            f"Web Search results:\n{search_result}\n\n"
             f"Farmer question: {query}"
         )),
     ]).content
@@ -687,7 +728,7 @@ def rag_node(state: AgroBotState) -> AgroBotState:
             context = "No relevant context found."
 
     lang = state["detected_lang"]
-    llm  = get_llm(temperature=0.4)
+    llm  = get_llm(temperature=0.2)
     response = llm.invoke([
         SystemMessage(content=_lang_prompt("rag", lang)),
         *state["messages"],
@@ -710,7 +751,7 @@ def rag_node(state: AgroBotState) -> AgroBotState:
 
 def general_node(state: AgroBotState) -> AgroBotState:
     lang = state["detected_lang"]
-    llm  = get_llm(temperature=0.5)
+    llm  = get_llm(temperature=0.3)
     response = llm.invoke([
         SystemMessage(content=_lang_prompt("general", lang)),
         *state["messages"],
@@ -870,6 +911,9 @@ def run_agrobot(
     audio_bytes:   bytes = None,
     audio_ext:     str   = "wav",
     audio_output:  bool  = False,
+    lang:          str   = "",   # UI-selected language — overrides auto-detection
+    location:      str   = None,
+    crop:          str   = None,
 ) -> dict:
     """
     Main entry point for the AgroBot agent.
@@ -893,7 +937,7 @@ def run_agrobot(
     initial_state: AgroBotState = {
         "messages":          history or [],
         "user_query":        user_message,
-        "detected_lang":     "en",
+        "detected_lang":     lang or detect_language_unicode(user_message) or "en",
         "intent":            "",
         "soil_data":         None,
         "prediction_result": None,
@@ -901,8 +945,8 @@ def run_agrobot(
         "market_result":     None,
         "rag_result":        None,
         "final_response":    None,
-        "detected_crop":     None,
-        "location":          None,
+        "detected_crop":     crop,
+        "location":          location,
         # audio fields
         "audio_input":       audio_bytes,
         "audio_ext":         audio_ext,

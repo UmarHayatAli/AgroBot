@@ -6,11 +6,13 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image
+from dotenv import load_dotenv
+load_dotenv()
 
 # ── CONFIGURATION ──────────────────────────────────────────────
-# Note: In production, consider moving API keys to environment variables (.env)
-GROQ_API_KEY = "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"
-KINDWISE_API_KEY = "gSkxIBLdoh1HeLUz3RHhE7ZP8eFeJgly5GdvDIRwTnbgK7Pplt"
+# Keys loaded from .env file — never hardcode API keys in source code
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+KINDWISE_API_KEY = os.getenv("KINDWISE_API_KEY", "")
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 KINDWISE_URL = "https://crop.kindwise.com/api/v1/identification?details=description,treatment,cause"

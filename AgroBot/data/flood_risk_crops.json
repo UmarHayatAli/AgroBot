@@ -1,0 +1,144 @@
+{
+  "crops": {
+    "wheat": {
+      "sensitivity": "medium",
+      "max_waterlogging_hours": 48,
+      "critical_stages": ["grain filling", "heading"],
+      "immediate_actions": [
+        "Open field drainage channels immediately",
+        "Remove standing water within 24 hours using pumps if needed",
+        "Avoid applying fertilizer on waterlogged soil",
+        "Monitor for fungal disease outbreak after water recedes"
+      ],
+      "emergency_chemical": "Spray Propiconazole 0.1% after water recedes to prevent rust",
+      "recovery_advice": "Wheat can recover if waterlogged for under 48 hours at vegetative stage. Flag leaf and beyond is critical.",
+      "insurance_note": "File crop damage report with local agriculture department within 72 hours"
+    },
+    "cotton": {
+      "sensitivity": "high",
+      "max_waterlogging_hours": 24,
+      "critical_stages": ["flowering", "boll development"],
+      "immediate_actions": [
+        "Drain field within 12-24 hours — cotton roots die quickly in waterlogged soil",
+        "Cease all irrigation immediately",
+        "Apply potassium fertilizer after drainage to restore root function",
+        "Scout for boll rot and whitefly surge after flooding"
+      ],
+      "emergency_chemical": "Spray copper oxychloride 3g/L against boll rot after water drains",
+      "recovery_advice": "Cotton at boll development stage cannot recover from >24 hours waterlogging. Significant yield loss expected.",
+      "insurance_note": "Cotton is highest priority for flood damage claims. Document with photos."
+    },
+    "rice": {
+      "sensitivity": "low",
+      "max_waterlogging_hours": 168,
+      "critical_stages": ["tillering", "panicle initiation"],
+      "immediate_actions": [
+        "Rice tolerates flooding — no panic for first 5-7 days",
+        "Ensure water does not exceed plant height for more than 3 days",
+        "Drain if water is turbid/murky (reduces photosynthesis)",
+        "Watch for submergence beyond 7 days which can kill plants"
+      ],
+      "emergency_chemical": "No emergency chemical needed unless disease appears",
+      "recovery_advice": "Rice is naturally tolerant. Varieties like Sub1 can survive 2 weeks submergence.",
+      "insurance_note": "Submit claims only if submergence exceeds 7+ days"
+    },
+    "maize": {
+      "sensitivity": "high",
+      "max_waterlogging_hours": 36,
+      "critical_stages": ["silking", "grain fill"],
+      "immediate_actions": [
+        "Drain field within 24-36 hours urgently",
+        "Create temporary drainage furrows between rows",
+        "Apply nitrogen fertilizer after drainage to compensate leaching",
+        "Check for stalk rot — major risk after flooding"
+      ],
+      "emergency_chemical": "Carbendazim 50 WP 1g/L spray on base of stalks to prevent stalk rot",
+      "recovery_advice": "Maize is very sensitive at silking — even 36 hours can cause significant yield reduction.",
+      "insurance_note": "Photograph the flooding extent and submit claim within 72 hours"
+    },
+    "sugarcane": {
+      "sensitivity": "medium",
+      "max_waterlogging_hours": 72,
+      "critical_stages": ["grand growth period"],
+      "immediate_actions": [
+        "Open drainage furrows along field edges",
+        "Avoid ratooning on waterlogged fields",
+        "Check for red rot infection after water drains",
+        "Do not apply urea until drainage is complete"
+      ],
+      "emergency_chemical": "Carbendazim 1g/L as soil drench after drainage to prevent red rot",
+      "recovery_advice": "Sugarcane can tolerate moderate flooding. Main risk is red rot and root damage.",
+      "insurance_note": "Document waterlogging duration and area affected"
+    },
+    "sunflower": {
+      "sensitivity": "high",
+      "max_waterlogging_hours": 24,
+      "critical_stages": ["flowering", "seed fill"],
+      "immediate_actions": [
+        "Drain field immediately — sunflower has zero tolerance",
+        "Apply calcium nitrate 5kg/acre after drainage",
+        "Scout for Sclerotinia stem rot after flooding",
+        "Avoid mechanical operations on wet soil"
+      ],
+      "emergency_chemical": "Carbendazim spray to prevent Sclerotinia after water recedes",
+      "recovery_advice": "Sunflower at flowering stage will likely not recover from >24 hours waterlogging.",
+      "insurance_note": "High value crop — prioritize insurance filing"
+    },
+    "potato": {
+      "sensitivity": "very_high",
+      "max_waterlogging_hours": 12,
+      "critical_stages": ["tuber development", "all stages"],
+      "immediate_actions": [
+        "EMERGENCY: Drain within 12 hours — tubers rot rapidly",
+        "Pump water out if natural drainage is insufficient",
+        "Apply Metalaxyl-M fungicide after drainage to prevent late blight surge",
+        "Harvest early if tubers are mature — do not risk further losses"
+      ],
+      "emergency_chemical": "Metalaxyl + Mancozeb spray (1g+2g per liter) as preventive measure",
+      "recovery_advice": "Potato cannot survive more than 12 hours waterlogging without significant losses.",
+      "insurance_note": "URGENT: File within 48 hours. High market value crop."
+    },
+    "onion": {
+      "sensitivity": "high",
+      "max_waterlogging_hours": 24,
+      "critical_stages": ["bulb development"],
+      "immediate_actions": [
+        "Drain field immediately",
+        "Apply fungicide to prevent basal rot",
+        "Do not irrigate for 2 weeks after natural flooding",
+        "Harvest if 70% mature to salvage crop"
+      ],
+      "emergency_chemical": "Carbendazim 1g/L drench around bulb base",
+      "recovery_advice": "Onion bulbs develop rot rapidly after flooding. Salvage harvest recommended.",
+      "insurance_note": "File claim with market price documentation"
+    },
+    "mango": {
+      "sensitivity": "medium",
+      "max_waterlogging_hours": 72,
+      "critical_stages": ["fruiting"],
+      "immediate_actions": [
+        "Clear drainage around tree root zones",
+        "Apply fungicide drench to prevent Phytophthora root rot",
+        "Do not apply nitrogen fertilizer on wet soil",
+        "Monitor for fruit drop"
+      ],
+      "emergency_chemical": "Metalaxyl soil drench to prevent Phytophthora root rot",
+      "recovery_advice": "Mature mango trees can tolerate short flooding. Young trees are more vulnerable.",
+      "insurance_note": "Document fruit drop count and tree damage for claims"
+    },
+    "default": {
+      "sensitivity": "medium",
+      "max_waterlogging_hours": 36,
+      "critical_stages": ["all stages"],
+      "immediate_actions": [
+        "Open all field drainage channels immediately",
+        "Remove standing water as quickly as possible",
+        "Do not apply any fertilizer until soil drains",
+        "Contact local agriculture extension officer for crop-specific advice"
+      ],
+      "emergency_chemical": "Consult local agriculture department for crop-specific fungicide",
+      "recovery_advice": "Monitor crop carefully for 7 days after flooding. Scout for disease.",
+      "insurance_note": "File crop damage report with local agriculture department within 72 hours"
+    }
+  }
+}

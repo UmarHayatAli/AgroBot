@@ -10,7 +10,7 @@ import numpy as np
 warnings.filterwarnings('ignore')
 
 # ====================== LOAD MODELS ======================
-print("🚀 Loading AgroBot models...")
+print("[AgroBot] Loading models...")
 model_path = os.path.join(os.path.dirname(__file__), "Models", "xgboost_model.pkl")
 scaler_path = os.path.join(os.path.dirname(__file__), "Models", "scaler.pkl")
 le_path = os.path.join(os.path.dirname(__file__), "Models", "label_encoder.pkl")
@@ -22,7 +22,7 @@ le         = pickle.load(open(le_path, 'rb'))
 knn_model  = pickle.load(open(knn_path, 'rb'))
 explainer  = pickle.load(open(explainer_path, 'rb'))
 
-print("✅ Classifier models loaded successfully!\n")
+print("[AgroBot] Classifier models loaded successfully!\n")
 
 # ====================== FEATURE RANGES (from your original code) ======================
 FEATURE_RANGES = {
@@ -231,7 +231,8 @@ def agro_predict(user_input: dict):
     temp = user_input.get('temperature') or user_input.get('Temperature')
     rain = user_input.get('rainfall') or user_input.get('Rainfall')
     
-    df_clean = pd.read_csv('Crop_recommendation.csv')  # Load for similar cases
+    _csv_path = os.path.join(os.path.dirname(__file__), 'Crop_recommendation.csv')
+    df_clean = pd.read_csv(_csv_path)  # Load for similar cases
     candidates = df_clean[
         (df_clean['temperature'].between(temp - 6, temp + 6)) &
         (df_clean['rainfall'].between(rain - 60, rain + 60))

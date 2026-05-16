@@ -174,7 +174,7 @@ def get_llm(temperature: float = 0.3) -> ChatGroq:
             "GROQ_API_KEY is not set. Add it to your .env file."
         )
     return ChatGroq(
-        model="openai/gpt-oss-120b",
+        model="llama-3.3-70b-versatile",
         temperature=temperature,
         api_key=api_key,
     )
