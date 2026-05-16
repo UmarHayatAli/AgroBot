@@ -227,7 +227,59 @@ Output: [Punjabi/Urdu] لاہور میں اس ہفتے کا موسم گرم او
 - **More Languages**: Architecture supports any language Whisper supports.
 
 ---
+## 👥 Team
 
+### 🧑‍💻 Umar Hayat Ali — *Team Lead*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Umar_Hayat_Ali-0077B5?logo=linkedin)](https://www.linkedin.com/in/umar-hayat-ali-89171639a)
+
+- Proposed the AgroBot concept and defined the project vision
+- Managed team coordination and communication throughout the project lifecycle
+- Developed the Weather Forecasting Module (Open-Meteo integration + Extreme Risk Engine)
+
+---
+
+### 🧑‍💻 Shah Hussain — *AI & Backend Engineer*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Shah_Hussain-0077B5?logo=linkedin)](https://www.linkedin.com/in/shah-hussain-b958b536b)
+
+- Built the foundational Agentic Chatbot using the LangGraph framework
+- Trained the XGBoost model for crop prediction from soil parameters and integrated it into the chatbot
+- Integrated the Disease Prediction API (Rayan) and Weather Forecasting Module (Umar) into the unified LangGraph Agentic RAG pipeline
+- Implemented RAG on common crop FAQs using ChromaDB
+- Drastically improved response quality through prompt engineering and optimised chunking & retrieval strategies
+
+---
+
+### 🧑‍💻 Muhammad Rayan Rao — *Frontend & ML Engineer*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Muhammad_Rayan_Rao-0077B5?logo=linkedin)](https://www.linkedin.com/in/muhammad-rayan-rao-8a7b8b37a)
+
+- Designed and developed the full Frontend UI
+- Built the Multilingual model pipeline
+- Developed the Disease Prediction CNN model and contributed to disease detection features
+
+---
+
+### 👩‍🏫 Miss Aniqa — *Project Mentor & Guide*
+
+- Provided expert guidance and mentorship throughout the project
+- Researched and recommended appropriate models and technologies
+- Refined ideas and caught critical errors with valuable corrective suggestions
+
+---
+
+### 👩‍💻 Miss Hafsa Abdullah — *Data Engineer*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Hafsa_Abdullah-0077B5?logo=linkedin)](https://www.linkedin.com/in/hafsa-abdullah-311403381)
+
+- Sourced, organised, and cleaned all datasets used for model training and RAG
+
+---
+
+### 👩‍💻 Miss Husna Gul — *Research & Presentations*
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Husna_Gul-0077B5?logo=linkedin)](https://www.linkedin.com/in/husna-gul-325b90407)
+
+- Prepared all presentation slides and supporting research materials
+- Provided critical feedback and creative suggestions for project improvement
+
+---
 ## License
 
 MIT — Free for educational and research use.
@@ -235,4 +287,3 @@ MIT — Free for educational and research use.
 ---
 
 *Built for Pakistani farmers. اپنی زمین، اپنی فصل، اپنا مشیر۔*
-Ha
